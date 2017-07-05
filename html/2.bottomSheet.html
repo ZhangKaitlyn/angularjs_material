@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Bottom Sheet</title>
+	<link rel="stylesheet" href="../node_modules/angular-material/angular-material.css">
+</head>
+<body ng-app="bottomSheetApp">
+<div ng-controller="bottomSheetCtrl">
+	<div layout="row" layout-align="center">
+		<md-button flex="50" class="md-primary md-raised" ng-click="showListBottomSheet()">Show as List</md-button>
+		<md-button flex="50" class="md-primary md-raised" ng-click="showGridBottomSheet()">Show as Grid</md-button>
+	</div>
+</div>
+
+
+<script src="../node_modules/angular/angular.js"></script>
+<script src="../node_modules/angular-aria/angular-aria.js"></script>
+<script src="../node_modules/angular-animate/angular-animate.js"></script>
+<script src="../node_modules/angular-material/angular-material.js"></script>
+<script>
+
+	// Include app dependency on ngMaterial
+
+	angular.module( 'bottomSheetApp', [ 'ngMaterial'])
+		.controller("bottomSheetCtrl", function($scope,$mdBottomSheet){
+			$scope.showListBottomSheet = function(){
+				$mdBottomSheet.show({
+					templateUrl:"bottom-sheet-list-template.html",
+					controller:"listBottomSheetCtrl"
+				}).then(function(clickItem){
+					console.log(clickItem);
+				}).catch(function(err){
+
+				});
+			}
+
+			$scope.showGridBottomSheet = function(){
+				console.log("show-grid-bottom-sheet");
+			}
+		})
+		.controller("listBottomSheetCtrl",function($scope){
+			console.log("listBottomSheetCtrl");
+			$scope.listItems = [
+				{ name:"share", icon:"share-arrow"},
+				{ name:"upload", icon:"upload"},
+				{ name:"copu", icon:"copy"},
+				{ name:"print this page", icon:"print"},
+			];
+			$scope.listItemClick = function ($index) {
+				var clickItem=$scope.listItems[$index]
+				$mdBottomSheet.hide(clickItem);
+			}
+		});
+
+</script>
+
+</body>
+</html>
