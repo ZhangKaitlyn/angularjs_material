@@ -22,6 +22,13 @@
 	// Include app dependency on ngMaterial
 
 	angular.module( 'bottomSheetApp', [ 'ngMaterial'])
+	.config(function($mdIconProvider){
+		$mdIconProvider
+		.icon("share-arrow","../assets/imgs/logo.svg",24)
+		.icon("upload","../assets/imgs/logo.svg",24)
+		.icon("copy","../assets/imgs/logo.svg",24)
+		.icon("print","../assets/imgs/logo.svg",24)
+	})
 		.controller("bottomSheetCtrl", function($scope,$mdBottomSheet){
 			$scope.showListBottomSheet = function(){
 				$mdBottomSheet.show({
@@ -30,15 +37,23 @@
 				}).then(function(clickItem){
 					console.log(clickItem);
 				}).catch(function(err){
-
+					console.log(err);
 				});
 			}
 
 			$scope.showGridBottomSheet = function(){
-				console.log("show-grid-bottom-sheet");
+				$mdBottomSheet.show({
+					templateUrl:"bottom-sheet-grid-template.html",
+					controller:"gridBottomSheetCtrl",
+					clickOutsideToClose:false
+				}).then(function(clickItem){
+					console.log(clickItem);
+				}).catch(function(err){
+					console.log(err);
+				})
 			}
 		})
-		.controller("listBottomSheetCtrl",function($scope){
+		.controller("listBottomSheetCtrl",function($scope, $mdBottomSheet){
 			console.log("listBottomSheetCtrl");
 			$scope.listItems = [
 				{ name:"share", icon:"share-arrow"},
@@ -47,7 +62,20 @@
 				{ name:"print this page", icon:"print"},
 			];
 			$scope.listItemClick = function ($index) {
-				var clickItem=$scope.listItems[$index]
+				var clickItem=$scope.listItems[$index];
+				$mdBottomSheet.hide(clickItem);
+			}
+		})
+		.controller("gridBottomSheetCtrl",function($scope, $mdBottomSheet){
+			console.log("gridBottomSheetCtrl");
+			$scope.gridItems = [
+				{ name:"share", icon:"share-arrow"},
+				{ name:"upload", icon:"upload"},
+				{ name:"copu", icon:"copy"},
+				{ name:"print this page", icon:"print"},
+			];
+			$scope.gridItemClick = function ($index) {
+				var clickItem=$scope.gridItems[$index];
 				$mdBottomSheet.hide(clickItem);
 			}
 		});
