@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Button</title>
+	<link rel="stylesheet" href="../node_modules/angular-material/angular-material.css">
+
+	<style>
+		.card-demo .card-media{
+			background-color: #999;
+		}
+	</style>
+</head>
+<body ng-app="cardApp" ng-controller="cardCtrl" class="card-demo">
+	<md-content class="md-padding" layout-xs="column" layout="row">
+		<div flex-xs flex-gt-xs="50" layout="column">
+			<md-card md-theme="{{showDarkTheme ? 'dark-grey' : 'default'}}" md-theme-watch>
+				<md-card-title>
+					<md-card-title-text>
+						<span class="md-headline">Card with image --headline</span>
+						<span class="md-subhead">Card with image --large --subhead</span>
+					</md-card-title-text>
+					<md-card-title-media>
+						<div class="md-media-lg card-media"></div>
+					</md-card-title-media>
+				</md-card-title>
+				<md-card-actions layout="row" layout-align="end center">
+					<md-button>Action1</md-button>
+					<md-button>Action2</md-button>
+				</md-card-actions>
+			</md-card>
+		</div>
+		<div flex-xs flex-gt-xs="50" layout="column">
+			<md-card md-theme="{{showDarkTheme ? 'dark-purple' : 'default'}}" md-theme-watch>
+				<md-card-title>
+					<md-card-title-text>
+						<span class="md-headline">Card with image --headline</span>
+						<span class="md-subhead">Card with image --medium --headline</span>
+					</md-card-title-text>
+					<md-card-title-media>
+						<div class="md-media-md card-media"></div>
+					</md-card-title-media>
+				</md-card-title>
+				<md-card-actions layout-align="end center" layout="row">
+					<md-button>Action1</md-button>
+					<md-button>Action2</md-button>
+				</md-card-actions>
+			</md-card>
+		</div>
+		<div flex-xs flex-gt-xs="50" layout="column">
+			<md-card md-theme="{{showDardTheme ? 'dark-primary' :'default'}}" md-theme-watch>
+				<md-card-title>
+					<md-card-title-text>
+						<span class="md-headline">Card with image --headline</span>
+						<span class="md-subhead">Card with image --small --subhead</span>
+					</md-card-title-text>
+					<md-card-title-media>
+						<div class="md-media-sm card-media"></div>
+					</md-card-title-media>
+				</md-card-title>
+				<md-card-actions layout="row" layout-align="end center">
+					<md-button>Action1</md-button>
+					<md-button>Action2</md-button>
+				</md-card-actions>
+			</md-card>
+		</div>
+		<div flex-xs flex-gt-xs="50" layout="column">
+			<md-card md-theme="{{showDarkTheme ? 'dark-orange' : 'default'}}" md-theme-watch>
+				<md-card-title>
+					<md-card-title-text>
+						<span class="md-heading">Card with image --headline</span>
+						<span class="md-subhead">Card with image --extra large --subhead</span>
+					</md-card-title-text>
+				</md-card-title>
+				<md-card-content layout="row" layout-align="space-between">
+					<div class="md-media-xl card-media"></div>
+
+					<md-card-actions layout="column">
+						<md-button class="md-icon-button" aria-label="smile">
+							<md-icon md-svg-icon="../assets/imgs/smile.svg"></md-icon>
+						</md-button>
+						<md-button class="md-icon-button" aria-label="smile">
+							<md-icon md-svg-icon="../assets/imgs/smile.svg"></md-icon>
+						</md-button>
+					</md-card-actions>
+				</md-card-content>
+			</md-card>
+		</div>
+	</md-content>
+
+<script src="../node_modules/angular/angular.js"></script>
+<script src="../node_modules/angular-aria/angular-aria.js"></script>
+<script src="../node_modules/angular-animate/angular-animate.js"></script>
+<script src="../node_modules/angular-material/angular-material.js"></script>
+<script>
+
+	// Include app dependency on ngMaterial
+
+	angular.module( 'cardApp', [ 'ngMaterial'])
+		.controller("cardCtrl", function($scope,$mdBottomSheet){
+			// $scope.showDarkTheme = true;
+		})
+		.config(function($mdThemingProvider){
+			$mdThemingProvider.theme("dark-grey").backgroundPalette("grey").dark();
+			$mdThemingProvider.theme("dark-blue").backgroundPalette("blue").dark();
+			$mdThemingProvider.theme("dark-purple").backgroundPalette("purple").dark();
+			$mdThemingProvider.theme("dark-orange").backgroundPalette("orange").dark();
+		});
+
+</script>
+</body>
+</html>

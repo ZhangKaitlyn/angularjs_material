@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Button</title>
+	<link rel="stylesheet" href="../node_modules/angular-material/angular-material.css">
+</head>
+<body ng-app="buttonApp" ng-controller="buttonCtrl">
+<section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+	<div class="label">Flat: </div>
+	<md-button>BUTTON</md-button>
+	<md-button md-no-ink class="md-primary">Primary(md-no-ink)</md-button>
+	<md-button ng-disabled="true" class="md-primary">Disabled</md-button>
+	<md-button class="md-warn">Warn</md-button>
+</section>
+
+<section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+	<div class="label">Raised</div>
+	<md-button class="md-raised">Button</md-button>
+	<md-button class="md-raised md-primary">Primary</md-button>
+	<md-button ng-disabled="true" class="md-raised md-prmary">Disabled</md-button>
+	<md-button class="md-raised md-warn">Disabled</md-button>
+</section>
+
+<section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+	<div class="label">FAB</div>
+	<md-button class="md-fab" aria-label="KeepWork">
+		<md-icon md-svg-src="../assets/imgs/atm.svg"></md-icon>
+	</md-button>
+	<md-button class="md-fab md-primary" aria-label="KeepWork">
+		<md-icon md-svg-src="../assets/imgs/atm.svg"></md-icon>
+	</md-button>
+	<md-button class="md-fab" ng-disabled="true" aria-label="KeepWork">
+		<md-icon md-svg-src="../assets/imgs/atm.svg"></md-icon>
+	</md-button>
+	<md-button class="md-fab md-primary md-hue-2" aria-label="KeepWork">
+		<md-icon md-svg-src="../assets/imgs/atm.svg"></md-icon>
+	</md-button>
+	<md-button class="md-fab md-mini" aria-label="KeepWork">
+		<md-icon md-svg-src="../assets/imgs/atm.svg"></md-icon>
+	</md-button>
+	<md-button class="md-fab md-primary md-mini" aria-label="KeepWork">
+		<md-icon md-svg-src="../assets/imgs/atm.svg"></md-icon>
+	</md-button>
+</section>
+
+<section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+	<div class="label">Link vs. Button</div>
+	<md-button ng-href="http://www.baidu.com" target="_blank">Default link</md-button>
+	<md-button ng-href="http://www.baidu.com" target="_blank" class="md-primary">Primary link</md-button>
+	<md-button>Default Button</md-button>
+</section>
+
+<section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+	<div class="label">Themed</div>
+	<md-button class="md-primary md-hue-1">Primary Hue 1</md-button>
+	<md-button class="md-raised md-warn md-hue-2">Raised Warn Hue 2</md-button>
+	<md-button class="md-accent">Accent</md-button>
+	<md-button class="md-raised md-accent md-hue-1">Raised Accent Hue 1</md-button>
+</section>
+
+<section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+	<div class="label">Icon Button</div>
+	<md-button class="md-icon-button" aria-label="Smile">
+		<md-icon md-svg-icon="../assets/imgs/smile.svg"></md-icon>
+	</md-button>
+	<md-button class="md-icon-button md-accent" aria-label="Smile">
+		<md-icon md-svg-icon="../assets/imgs/smile.svg"></md-icon>
+	</md-button>
+	<md-button class="md-icon-button" aria-label="Smile">
+		<md-icon md-svg-icon="../assets/imgs/smile.svg"></md-icon>
+	</md-button>
+	<md-button class="md-icon-button launch" href="http://www.baidu.com" title="Launch Bdidu in new window" target="_blank" ng-disabled="true" aria-label="Smile">
+		<md-icon md-svg-icon="../assets/imgs/smile.svg"></md-icon>
+	</md-button>
+</section>
+
+<script src="../node_modules/angular/angular.js"></script>
+<script src="../node_modules/angular-aria/angular-aria.js"></script>
+<script src="../node_modules/angular-animate/angular-animate.js"></script>
+<script src="../node_modules/angular-material/angular-material.js"></script>
+<script>
+
+	// Include app dependency on ngMaterial
+
+	angular.module( 'buttonApp', [ 'ngMaterial'])
+		.controller("buttonCtrl", function($scope,$mdBottomSheet){
+		});
+
+</script>
+</body>
+</html>
