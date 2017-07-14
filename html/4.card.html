@@ -11,7 +11,16 @@
 	</style>
 </head>
 <body ng-app="cardApp" ng-controller="cardCtrl" class="card-demo">
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<h2>Basic Card</h2>
+		</div>
+	</md-toolbar>
 	<md-content class="md-padding" layout-xs="column" layout="row">
+		<div class="label">
+			<input type="checkbox" id="showDarkTheme" ng-model="showDarkTheme">
+			<label for="showDarkTheme">showDarkTheme</label>
+		</div>
 		<div flex-xs flex-gt-xs="50" layout="column">
 			<md-card md-theme="{{showDarkTheme ? 'dark-grey' : 'default'}}" md-theme-watch>
 				<md-card-title>
@@ -28,8 +37,6 @@
 					<md-button>Action2</md-button>
 				</md-card-actions>
 			</md-card>
-		</div>
-		<div flex-xs flex-gt-xs="50" layout="column">
 			<md-card md-theme="{{showDarkTheme ? 'dark-purple' : 'default'}}" md-theme-watch>
 				<md-card-title>
 					<md-card-title-text>
@@ -47,7 +54,7 @@
 			</md-card>
 		</div>
 		<div flex-xs flex-gt-xs="50" layout="column">
-			<md-card md-theme="{{showDardTheme ? 'dark-primary' :'default'}}" md-theme-watch>
+			<md-card md-theme="{{showDarkTheme ? 'dark-blue' : 'default'}}" md-theme-watch>
 				<md-card-title>
 					<md-card-title-text>
 						<span class="md-headline">Card with image --headline</span>
@@ -62,8 +69,6 @@
 					<md-button>Action2</md-button>
 				</md-card-actions>
 			</md-card>
-		</div>
-		<div flex-xs flex-gt-xs="50" layout="column">
 			<md-card md-theme="{{showDarkTheme ? 'dark-orange' : 'default'}}" md-theme-watch>
 				<md-card-title>
 					<md-card-title-text>
@@ -87,24 +92,52 @@
 		</div>
 	</md-content>
 
-<script src="../node_modules/angular/angular.js"></script>
-<script src="../node_modules/angular-aria/angular-aria.js"></script>
-<script src="../node_modules/angular-animate/angular-animate.js"></script>
-<script src="../node_modules/angular-material/angular-material.js"></script>
-<script>
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<h2>Card Action Buttons</h2>
+		</div>
+	</md-toolbar>
+	<md-content class="md-padding" layout-xs="column" layout="row">
+		<div flex-xs flex-gt-xs="50" layout="column">
+			<md-card>
+				<img src="../assets/imgs/washedout.png" alt="">
+				<md-card-title>
+					<md-card-title-text>
+						<span class="md-headline">Action buttons</span>
+					</md-card-title-text>
+				</md-card-title>
+				<md-card-content>
+					<p>line1line1line1line1line1line1line1line1line1line1line1line1</p>
+					<p>line2line2line2line2line2line2line2line2line2line2line2line2line2</p>
+					<p>line3line3line3line3line3line3line3line3line3line3line3</p>
+					<p>line4line4line4line4line4line4line4line4line4line4line4line4</p>
+				</md-card-content>
+				<md-card-actions layout="row" layout-align="end center">
+					<md-button>Action 1</md-button>
+					<md-button>Action 2</md-button>
+				</md-card-actions>
+			</md-card>
+		</div>
+	</md-content>
+
+	<script src="../node_modules/angular/angular.js"></script>
+	<script src="../node_modules/angular-aria/angular-aria.js"></script>
+	<script src="../node_modules/angular-animate/angular-animate.js"></script>
+	<script src="../node_modules/angular-material/angular-material.js"></script>
+	<script>
 
 	// Include app dependency on ngMaterial
 
 	angular.module( 'cardApp', [ 'ngMaterial'])
-		.controller("cardCtrl", function($scope,$mdBottomSheet){
+	.controller("cardCtrl", function($scope,$mdBottomSheet){
 			// $scope.showDarkTheme = true;
 		})
-		.config(function($mdThemingProvider){
-			$mdThemingProvider.theme("dark-grey").backgroundPalette("grey").dark();
-			$mdThemingProvider.theme("dark-blue").backgroundPalette("blue").dark();
-			$mdThemingProvider.theme("dark-purple").backgroundPalette("purple").dark();
-			$mdThemingProvider.theme("dark-orange").backgroundPalette("orange").dark();
-		});
+	.config(function($mdThemingProvider){
+		$mdThemingProvider.theme("dark-grey").backgroundPalette("grey").dark();
+		$mdThemingProvider.theme("dark-blue").backgroundPalette("blue").dark();
+		$mdThemingProvider.theme("dark-purple").backgroundPalette("purple").dark();
+		$mdThemingProvider.theme("dark-orange").backgroundPalette("orange").dark();
+	});
 
 </script>
 </body>
