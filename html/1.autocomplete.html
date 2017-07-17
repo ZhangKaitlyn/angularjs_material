@@ -5,7 +5,12 @@
 	<link rel="stylesheet" href="../node_modules/angular-material/angular-material.min.css">
 </head>
 <body ng-app="autocompleteApp">
-	<div ng-controller="autocompleteCtrl">
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<h2>Autocomplete Basic Usage</h2>
+		</div>
+	</md-toolbar>
+	<div ng-controller="autocompleteCtrl as ctrl">
 		<md-autocomplete
 		ng-disabled="ctrl.isDisabled"
 		md-no-cache="ctrl.noCache"
@@ -27,16 +32,264 @@
 		</md-autocomplete>
 	</div>
 
+	<md-toolbar style = "margin-top: 20px;">
+		<div class="md-toolbar-tools">
+			<h2>
+				Custom Template
+			</h2>
+		</div>
+	</md-toolbar>
+	<div ng-controller = "customAutoCompleteCtrl as ctrl" layout = "column">
+		<md-autocomplete
+			ng-disabled = "ctrl.isDisabled"
+			md-no-cache = "ctrl.noCache"
+			md-items = "item in ctrl.querySearch(ctrl.searchText)"
+			md-item-text = "item.name"
+			md-selected-item = "ctrl.selectedItem"
+			md-selected-item-change = "ctrl.selectedItemChange(item)"
+			md-search-text = "ctrl.searchText"
+			md-search-text-change = "ctrl.searchTextChange(ctrl.searchText)"
+			md-min-length = "0"
+			placeholder = "Pick an Angular resporitory"
+			md-memu-class = "autocomplete-custom-template">
+			<md-item-template>
+				<span class="item-title">
+					<md-icon md-svg-icon="../assets/imgs/smile.svg"></md-icon>
+					<span>{{item.name}}</span>
+				</span>
+				<span class="item-metadata">
+					<strong>{{item.watchers}}</strong> watchers
+				</span>
+				<span>
+					<strong>{{item.forks}}</strong> forks
+				</span>
+			</md-item-template>
+			
+		</md-autocomplete>
+	</div>
+
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<h2>Floating Label</h2>
+		</div>
+	</md-toolbar>
+	<div ng-controller="floatingLabelCtrl as ctrl" layout="column">
+		<md-content class="md-padding">
+			<form ng-submit="$event.preventDefault()" name="searchForm">
+				<div layout-gt-sm="row">
+					<md-input-container flex>
+						<label>Name</label>
+						<input type="text">
+					</md-input-container>
+					<md-autocomplete flex required
+						md-input-name="autocompleteField"
+						md-input-minlength="2"
+						md-input-maxlength="18"
+						md-no-cache="ctrl.noCache"
+						md-selectedItem="ctrl.selectedItem"
+						md-search-text="ctrl.searchText"
+						md-items="item in ctrl.querySearch(ctrl.searchText)"
+						md-item-text="item.display"
+						md-require-match
+						md-floating-label="Favorite State">
+							<md-item-template>
+								<span md-highlight-text=ctrl.searchText>{{item.display}}</span>
+							</md-item-template>
+							<div ng-messages="searchForm.autocompleteField.$error" ng-if="searchForm.autocompleteField.$touched">
+								<div ng-message="required">required</div>
+								<div ng-message="md-require-match">existed state</div>
+								<div ng-message="minlength">min-length</div>
+								<div ng-message="maxlength">max-length</div>
+							</div>
+						</md-autocomplete>
+				</div>
+			</form>
+		</md-content>
+	</div>
+
 	<script src="../node_modules/angular/angular.min.js"></script>
 	<script src="../node_modules/angular-aria/angular-aria.min.js"></script>
 	<script src="../node_modules/angular-animate/angular-animate.min.js"></script>
-	<script src="../node_modules/angular-material/angular-material.min.js"></script>
+	<script src="../node_modules/angular-messages/angular-messages.js"></script>
+	<script src="../node_modules/angular-material/angular-material.js"></script>
+	<!-- <script src="../node_modules/angular-material/angular-material.min.js"></script> -->
 	<script>
-		angular.module("autocompleteApp",["ngMaterial"])
-		.controller("autocompleteCtrl",autocompleteCtrl);
+		angular.module("autocompleteApp",["ngMaterial","ngMessages"])
+		.controller("autocompleteCtrl",autocompleteCtrl)
+		.controller("customAutoCompleteCtrl",customAutoCompleteCtrl)
+		.controller("floatingLabelCtrl",floatingLabelCtrl);
 
-		function autocompleteCtrl(){
+		function autocompleteCtrl($log){
 			var self = this;
+			self.simulateQuery = false;
+			self.disabled = false;
+			self.states = loadAll();
+			self.querySearch = function(query){
+				console.log(self.states);
+				// debugger;
+				var results = query ? self.states.filter(createFilterFor(query)) : self.states, 
+					defferred;
+				if (self.simulateQuery) {
+					defferred = $1.defer();
+					$timeout(function(){
+						defferred.resolve(results);
+					}, Math.random()*1000, false);
+					return defferred.promise;
+				}else{
+					return results;
+				}
+			};
+			self.selectedItemChange = function(item){
+				$log.info("Item changed to "+JSON.stringify(item));
+			};
+			self.searchTextChange = function(text){
+				$log.info("Text changed to "+ text);
+			};
+			self.newState = function(state){
+				console.log("Sorry,You will need to create a constitution for "+state+" first!");
+			};
+
+			function loadAll(){
+				var allStates = 'Alabama, Alaska, Arizona, Arkansas, California, Colorado, Connecticut, Delaware,\
+              Florida, Georgia, Hawaii, Idaho, Illinois, Indiana, Iowa, Kansas, Kentucky, Louisiana,\
+              Maine, Maryland, Massachusetts, Michigan, Minnesota, Mississippi, Missouri, Montana,\
+              Nebraska, Nevada, New Hampshire, New Jersey, New Mexico, New York, North Carolina,\
+              North Dakota, Ohio, Oklahoma, Oregon, Pennsylvania, Rhode Island, South Carolina,\
+              South Dakota, Tennessee, Texas, Utah, Vermont, Virginia, Washington, West Virginia,\
+              Wisconsin, Wyoming';
+              // console.log(allStates.split(/, +/g));
+            	return allStates.split(/, +/g).map(function(state){
+            		return {
+            			value: state.toLowerCase(),
+            			display: state
+            		};
+            	});
+			};
+
+			function createFilterFor(query){
+				var lowerCaseQuery = angular.lowercase(query);
+
+				return function filterFn(state){
+					return (state.value.indexOf(lowerCaseQuery) === 0);
+				}
+			}
+		}
+
+		function customAutoCompleteCtrl($q, $timeout, $log){
+			var self = this;
+
+			self.isDisabled = false;
+			self.noCache = false;
+			self.simulateQuery = false;
+
+			self.querySearch = function(query){
+				var results = query ? self.repos.filter(createFilterFor(query)) : self.repos, defferred;
+				if(self.simulateQuery){
+					defferred = $q.defer();
+					$setTimeout(function() {
+						defferred.resolve(results);
+					}, Math.random()*1000, false);
+				}else{
+					return results;
+				}
+			}
+
+			self.selectedItemChange = function(item){
+				$log.info("Item changed to " + JSON.stringify(item));
+			}
+
+			self.searchTextChange = function(text){
+				$log.info("Text changed to " + text);
+			}
+
+			self.repos = function(){
+				var repos = [
+					{
+						'name':'AngularJs1',
+						'url':'https://github.com/angular/angular.js',
+						'watchers':'3,626',
+						'forks':'35,256'
+					},
+					{
+						'name':'AngularJs2',
+						'url':'https://github.com/angular/angular.js',
+						'watchers':'3,626',
+						'forks':'35,256'
+					},
+					{
+						'name':'AngularJs3',
+						'url':'https://github.com/angular/angular.js',
+						'watchers':'3,626',
+						'forks':'35,256'
+					},
+					{
+						'name':'AngularJs4',
+						'url':'https://github.com/angular/angular.js',
+						'watchers':'3,626',
+						'forks':'35,256'
+					},
+					{
+						'name':'AngularJs5',
+						'url':'https://github.com/angular/angular.js',
+						'watchers':'3,626',
+						'forks':'35,256'
+					}
+				];
+
+				return repos.map(function(repo){
+					repo.value = repo.name.toLowerCase();
+					return repo;
+				});
+			}();
+
+			function createFilterFor(query){
+				var lowerCaseQuery = angular.lowercase(query);
+
+				return function filterFn(item){
+					return (item.value.indexOf(lowerCaseQuery) === 0);
+				}
+			}
+		}
+
+		function floatingLabelCtrl($q, $timeout){
+			var self = this;
+
+			self.noCache = false;
+
+			self.states = function(){
+				var states='Alabama, Alaska, Arizona, Arkansas, California, Colorado, Connecticut, Delaware,\
+              Florida, Georgia, Hawaii, Idaho, Illinois, Indiana, Iowa, Kansas, Kentucky, Louisiana,\
+              Maine, Maryland, Massachusetts, Michigan, Minnesota, Mississippi, Missouri, Montana,\
+              Nebraska, Nevada, New Hampshire, New Jersey, New Mexico, New York, North Carolina,\
+              North Dakota, Ohio, Oklahoma, Oregon, Pennsylvania, Rhode Island, South Carolina,\
+              South Dakota, Tennessee, Texas, Utah, Vermont, Virginia, Washington, West Virginia,\
+              Wisconsin, Wyoming';
+
+              	return states.split(/, +/g).map(function(state){
+          			return{
+          				value: state.toLowerCase(),
+          				display:state
+          			};
+              	});
+			}();
+
+			self.querySearch = function(query){
+				var results = query ? self.states.filter(createFilterFor(query)) : self.states;
+				var defferred = $q.defer();
+				$timeout(function() {
+					defferred.resolve(results);
+				}, Math.random()*1000, false);
+
+				return defferred.promise;
+			}
+
+			function createFilterFor(query){
+				var lowerCaseQuery = angular.lowercase(query);
+
+				return function filterFn(state){
+					return (state.value.indexOf(lowerCaseQuery) === 0);
+				}
+			}
 		}
 	</script>
 </body>
