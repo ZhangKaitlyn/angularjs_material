@@ -5,8 +5,13 @@
 	<link rel="stylesheet" href="../node_modules/angular-material/angular-material.min.css">
 </head>
 <body ng-app="checkboxApp">
-	<div ng-controller="checkboxCtrl" class="md-padding">
-		<div>
+	<div ng-controller="checkboxCtrl">
+		<md-toolbar>
+			<div class="md-toolbar-tools">
+				<h2>Basic Usage</h2>
+			</div>
+		</md-toolbar>
+		<div class="md-padding">
 			<fieldset class="standard">
 				<legend>Using &lt;ng-model&gt;</legend>
 				<div layout-wrap layout-gt-sm="row">
@@ -35,8 +40,81 @@
 							Checkbox; Disabled
 						</md-checkbox>
 					</div>
+					<div flex-gt-sm="50">
+						<md-checkbox md-no-ink aria-label="checkbox(md-primary):no ink" ng-model="data.cb5" class="md-primary">Checkbox(md-primary):No Ink</md-checkbox>
+					</div>
+					<div flex-gt-sm="50">
+						<md-checkbox md-indeterminate aria-label="checkbox:indeterminate" class="md-primary">Checkbox:indeterminate</md-checkbox>
+					</div>
+					<div flex-gt-sm="50">
+						<md-checkbox md-indeterminate aria-label="checkbox disabled indeterminate" ng-disabled="true" class="md-primary">Checkbox:Disabled Indeterminate</md-checkbox>
+					</div>
 				</div>
 			</fieldset>	
+		</div>
+	</div>
+
+	<div ng-controller="selectAllCtrl" style="margin-top: 20px">
+		<md-toolbar>
+			<div class="md-toolbar-tools">
+				<h2>Select All</h2>
+			</div>
+		</md-toolbar>
+		<div>
+			<fieldset>
+				<legend>Using &lt;md-checking&gt;with the 'indeterminate' attribute</legend>
+				<div layout="row" layout-wrap flex>
+					<div flex-xs flex="50">
+						<md-checkbox aria-label="Select All" ng-checked="isChecked()" md-indeterminate="isIndeterminate()" ng-click="toggleAll()">
+							<span ng-if="isChecked()">Un-</span>Select All
+						</md-checkbox>
+					</div>
+					<div flex="100" ng-repeat="item in items">
+						<md-checkbox ng-checked="exists(item, selected)" ng-click="toggle(item, selected)">{{ item }}</md-checkbox>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+	</div>
+
+	<div ng-controller="syncCtrl" style="margin-top: 20px;">
+		<md-toolbar>
+			<div class="md-toolbar-tools">
+				<h2>Syncing</h2>
+			</div>
+		</md-toolbar>
+		<div layout="row" lyout-wrap>
+			<div flex="100" flex-gt-sm="50" layout="column">
+				<div>
+					<fieldset>
+						<legend>Using&lt;md-checkbox&gt;with&lt;ng-checked&gt;</legend>
+						<div layout="row" layout-wrap flex>
+							<div flex="50" ng-repeat="item in items">
+								<md-checkbox ng-checked="exists(item, selected)" ng-click="toggle(item, selected)">{{item}} <span ng-if="exists(item, selected)">selected</span></md-checkbox>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+			</div>
+			<div flex="100" flex-gt-sm="50" layout="column">
+				<div>
+					<fieldset>
+						<legend>Using&lt;input type="checkbox"&gt;</legend>
+						<div layout="row" layout-wrap flex>
+							<div flex="50" ng-repeat="item in items">
+								<label>
+									<input type="checkbox" ng-checkd="exists(item, selected)" ng-click="toggle(item, selected)">
+									{{item}}
+								</label>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+			</div>
+			<div flex="100">
+				<h2 class="md-title">Selected items</h2>
+				<code>{{selected | json}}</code>
+			</div>
 		</div>
 	</div>
 
@@ -46,15 +124,67 @@
 <script src="../node_modules/angular-material/angular-material.min.js"></script>
 <script>
 	angular.module("checkboxApp",["ngMaterial"])
-	.controller("checkboxCtrl", checkboxCtrl);
+	.controller("checkboxCtrl", checkboxCtrl)
+	.controller("selectAllCtrl", selectAllCtrl)
+	.controller("syncCtrl",syncCtrl);
 
 	function checkboxCtrl($scope){
 		$scope.data={
 			"cb1":true,
 			"cb2":false,
 			"cb3":false,
-			"cb4":false
+			"cb4":false,
+			"cb5":false
 		};
+	}
+
+	function selectAllCtrl($scope){
+		$scope.items = [1, 2, 3, 4, 5];
+		$scope.selected = [];
+		$scope.isChecked = function(){
+			return $scope.selected.length === $scope.items.length;
+		}
+		$scope.isIndeterminate = function () {
+			return ($scope.selected.length !== 0 && $scope.selected.length !== $scope.items.length);
+		}
+		$scope.toggleAll = function(){
+			if ($scope.selected.length === $scope.items.length) {
+				$scope.selected = [];
+			}else if ($scope.selected.length === 0 || $scope.selected.length > 0) {
+				$scope.selected = $scope.items.slice(0);
+			}
+		}
+
+		$scope.toggle = function(item, list){
+			var idx = list.indexOf(item);
+			if (idx > -1) {
+				list.splice(idx, 1);
+			}else{
+				list.push(item);
+			}
+		}
+
+		$scope.exists = function(item, list){
+			return list.indexOf(item) > -1;
+		}
+	}
+
+	function syncCtrl($scope){
+		$scope.items = [1, 2, 3, 4, 5];
+		$scope.selected=[];
+
+		$scope.toggle = function(item, list) {
+			var idx=list.indexOf(item);
+			if(idx > -1){
+				list.splice(idx, 1);
+			}else{
+				list.push(item);
+			}
+		}
+
+		$scope.exists = function(item, list) {
+			return list.indexOf(item) > -1;
+		}
 	}
 </script>
 </body>
