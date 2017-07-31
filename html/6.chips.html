@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Chips</title>
+	<link rel="stylesheet" href="../node_modules/angular-material/angular-material.min.css">
+</head>
+<body ng-app="chipsApp">
+<div ng-controller="basicChipsCtrl as ctrl" layout="column">
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<h2>Basic Chips</h2>
+		</div>
+	</md-toolbar>
+	<md-content class="md-padding" layout="column">
+		<h2 class="md-title">Use a custom chip temolate.</h2>
+		<form name="fruitForm">
+			<md-chips ng-model="ctrl.roFruitNames" name="fruitName" readonly="ctrl.readonly" md-removable="ctrl.removable" md-max-chips="5" placeholder="Enter a fruit...">
+				<md-chip-template>
+					<strong>{{$chip}}</strong>
+					<em>(fruit)</em>
+				</md-chip-template>
+			</md-chips>
+
+			<div ng-messages="fruitForm.fruitName.$error">
+				<div ng-message="md-max-chips">Maximum number of chips reached.</div>
+			</div>
+		</form>
+
+		<h2 class="md-title">Use the default chip template</h2>
+		<md-chips ng-model="ctrl.fruitNames" readonly="ctrl.readonly" md-removable="ctrl.removable"></md-chips>
+
+		<h2 class="md-title">Make chips editable.</h2>
+		<md-chips ng-model="ctrl.editableFruitNames" readonly="ctrl.readonly" md-removable="ctrl.removable" md-enable-chip-edit="true"></md-chips>
+
+		<h2 class="md-title">Use placeholders and override hint texts.</h2>
+		<md-chips
+		    ng-model="ctrl.tags"
+		    readonly="ctrl.readonly"
+		    md-removable="ctrl.removable"
+		    placeholder="Enter a tag"
+		    delete-button-label="Remove Tag"
+		    delete-hint="Press delete to remove tag"
+		    secondary-placeholder=" + Tag">
+		</md-chips>
+
+		<h2 class="md-title">Display an ordered set of objects as chips(with custom template).</h2>
+		<p>Note: the variables <code>$chip</code> and <code>$index</code> are available in custom chip templates.</p>
+		<md-chips ng-model="ctrl.vegObjs" readonly="ctrl.readonly" md-removable="ctrl.removable" md-transform-chip="ctrl.newVeg($chip)">
+			<md-chip-template>
+				<span>
+					<strong>[{{$index}}] [{{$chip.name}}]</strong>
+					<em>({{$chip.type}})</em>
+				</span>
+			</md-chip-template>
+			<button md-chip-remove class="md-primary badge-btn">
+				<md-icon md-svg-src="../assets/imgs/close.svg"></md-icon>
+			</button>
+		</md-chips>
+	</md-content>
+</div>
+
+<div ng-controller="contactChipsCtrl as ctrl" layout="column">
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<h2>Contact Chips</h2>
+		</div>
+	</md-toolbar>
+	<md-content class="md-padding autocomplete" layout="column">
+		<md-contact-chips
+		    ng-model="ctrl.contacts"
+		    md-contacts="ctrl.querySearch($query)"
+		    md-contact-name="name"
+		    md-contact-image="image"
+		    md-contact-email="email"
+		    md-require-match="true"
+		    md-highlight-flags="i"
+		    filter-selected="ctrl.filterSelected"
+		    placeholder="To">
+		</md-contact-chips>
+		<md-list>
+			<md-subheader class="md-no-sticky">Contacts</md-subheader>
+			<md-list-item class="md-2-line" ng-repeat="(index, contact) in ctrl.allContacts" ng-if="ctrl.contacts.indexOf(contact) < 0">
+				<img ng-src="{{contact.image}}" class="md-avatar" alt="{{contact.name}}">
+				<div class="md-list-item-text">
+					<h3>{{contact.name}}</h3>
+					<p>{{contact.email}}</p>
+				</div>
+			</md-list-item>
+		</md-list>
+
+		<h2 class="md-title">Searching asynchrously.</h2>
+		<md-contact-chips 
+			ng-model="ctrl.asyncContacts"
+			md-contacts="ctrl.delayedQuerySearch($query)"
+			md-contact-name="name"
+			md-contact-image="image"
+			md-contact-email="email"
+			md-require-match="true"
+			md-highlight-flags="i"
+			filter-selected="ctrl.filterSelected"
+			placeholder="To">
+		</md-contact-chips>
+	</md-content>
+</div>
+
+<div ng-controller="customInputsChipsCtrl as ctrl" layout="column">
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<h2>Custom Inputs</h2>
+		</div>
+	</md-toolbar>
+	<md-content class="md-padding" layout="column">
+		<h2 class="md-title">Use an <code>input</code> element with no model to build an ordered set of chips.</h2>
+		<md-chips ng-model="ctrl.numberChips">
+			<input type="number" placeholder="Enter a nmber">
+		</md-chips>
+
+		<h2 class="md-title">Use an <code>input</code> element to build an ordered set of chips.</h2>
+		<md-chips ng-model="ctrl.numberChips2">
+			<input type="number" ng-model="ctrl.numberBuffer" placeholder="Enter a number">
+		</md-chips>
+
+		<h2 class="md-title">Use <code>md-autocomplete</code> to build an ordered set of chips.</h2>
+		<md-chips ng-model="ctrl.selectedVegetables" md-autocomplete-snap md-transform-chip="ctrl.transformChip($chip)" md-require-match="ctrl.autocompleteRequestMatch">
+			<md-autocomplete
+				md-selected-item = "ctrl.selectedItem"
+				md-search-text = "ctrl.searchText"
+				md-items = "item in ctrl.querySearch(ctrl.searchText)"
+				md-item-text = "item.name"
+				placeholder="Search for a vegetable">
+				<span md-highlight-text="ctrl.searchText">{{item.name}}::{{item.type}}</span>
+			</md-autocomplete>
+			<md-chip-template>
+				<span>
+					<strong>{{$chip.name}}</strong>
+					<em>{{$chip.type}}</em>
+				</span>
+			</md-chip-template>
+		</md-chips>
+		<p>
+			<md-checkbox ng-model="ctrl.autocompleteRequestMatch">Tell the autocomplete to require a match(when enabled you cannot create a new chips)</md-checkbox>
+		</p>
+		<h3 class="md-title">Vegetable Options</h3>
+		<md-list>
+			<md-list-item class="md-2-line" ng-repeat="veg in ctrl.vegetables" layout="row" layout-wrap>
+				<div class="md-item-text md-whiteframe-z1" flex>
+					<h3>{{veg.name}}</h3>
+					<p>{{veg.type}}</p>
+				</div>
+			</md-list-item>
+		</md-list>
+	</md-content>
+</div>
+
+<script src="../node_modules/angular/angular.min.js"></script>
+<script src="../node_modules/angular-aria/angular-aria.min.js"></script>
+<script src="../node_modules/angular-animate/angular-animate.min.js"></script>
+<script src="../node_modules/angular-messages/angular-messages.min.js"></script>
+<script src="../node_modules/angular-material/angular-material.min.js"></script>
+<script>
+	angular.module("chipsApp",["ngMaterial", "ngMessages"])
+	.controller("basicChipsCtrl", basicChipsCtrl)
+	.controller("contactChipsCtrl", contactChipsCtrl)
+	.controller("customInputsChipsCtrl", customInputsChipsCtrl);
+
+	function basicChipsCtrl(){
+		var self = this;
+		self.readonly = false;
+		self.removable = true;
+		self.fruitNames = ["Apple", "Banana", "Orange"];
+		self.roFruitNames = angular.copy(self.fruitNames);
+		self.editableFruitNames = angular.copy(self.fruitNames);
+		self.tags=[];
+
+		self.vegObjs = [
+		{
+			"name":"ABC",
+			"type":"type1"
+		},
+		{
+			"name":"BCD",
+			"type":"type2"
+		},
+		{
+			"name":"CDE",
+			"type":"type3"
+		},
+		{
+			"name":"DEF",
+			"type":"type4"
+		},
+		{
+			"name":"EFG",
+			"type":"type5"
+		}
+		];
+
+		self.newVeg = function(chip){
+			return {
+				"name":chip,
+				"type":"unknown"
+			}
+		}
+	}
+	function contactChipsCtrl($q, $timeout){
+		var self = this;
+		var pendingSearch, lastSearch, cancelSearch = angular.noop;
+
+		self.filterSelected = true;
+		self.allContacts = function(){
+			var contacts = [
+				"Marina Augustine",
+				"Oddr Sarno",
+				"Nick Gianopolos",
+				"Narayana Garner",
+				"Anita Gros",
+				"Megan Smitch",
+				"Tsvetko Metzger",
+				"Hecker Simet",
+				"Some-guy withaloglastname"
+			];
+
+			return contacts.map(function(c, index){
+				var cParts = c.split(" ");
+				var email = cParts[0][0].toLowerCase() + "." + cParts[0][1].toLowerCase + "@example.com";
+				var contact = {
+					name: c,
+					email: email,
+					image:'../assets/imgs/smile.svg'
+				};
+				contact._lowername = contact.name.toLowerCase();
+				return contact;
+			});
+		}();
+
+		self.contacts = [self.allContacts[0]];
+		self.asyncContacts = [];
+		self.querySearch = function(query){
+			return query ? self.allContacts.filter(createFilterFor(query)) : [];
+		}
+
+		function createFilterFor(query){
+			var lowercaseQuery = angular.lowercase(query);
+			return function filterFn(contact){
+				return (contact._lowername.indexOf(lowercaseQuery) != -1);
+			}
+		}
+
+		self.delayedQuerySearch = function(query){
+			if(!pendingSearch || !debounceSearch()){
+				cancelSearch();
+				return pendingSearch = $q(function(resolve, reject){
+					cancelSearch = reject;
+					$timeout(function(){
+						resolve(self.querySearch(query));
+						refreshBounce();
+					}, Math.random() *500, true);
+				})
+			}
+			return pendingSearch;
+		}
+
+		function debounceSearch(){
+			var now = new Date().getMilliseconds();
+			lastSearch = lastSearch || now;
+			return ((now - lastSearch) > 300);
+		}
+
+		function refreshBounce(){
+			lastSearch = 0;
+			pendingSearch = null;
+			cancelSearch = angular.noop;
+		}
+	}
+	function customInputsChipsCtrl(){
+		var self = this;
+		self.numberChips = [];
+
+		self.numberChips2 = [];
+		self.numberBuffer = "";
+
+		self.autocompleteRequestMatch = true;
+		self.selectedVegetables = [];
+		self.selectedItem = null;
+		self.searchText = null;
+		self.vegetables = function(){
+			var veggies=[
+			{
+				"name":"Broccoli",
+				"type":"Brassica"
+			},
+			{
+				"name":"Cabbage",
+				"type":"Brassica"
+			},
+			{
+				"name":"carrot",
+				"type":"Umbelliferous"
+			},
+			{
+				"name":"Lettuce",
+				"type":"Composite"
+			},
+			{
+				"name":"Spinach",
+				"type":"Foosefoot"
+			}
+			];
+
+			return veggies.map(function(veg){
+				veg._lowername = veg.name.toLowerCase();
+				veg._lowertype = veg.type.toLowerCase();
+				return veg;
+			});
+		}();
+		self.transformChip = function(chip){
+			if(angular.isObject(chip)){
+				return chip;
+			}
+			return {
+				name: chip,
+				type:"new"
+			};
+		}
+		self.querySearch = function(query){
+			return (query ? self.vegetables.filter(createFilterFor(query)) : []);
+		}
+		function createFilterFor(query){
+			var lowercaseQuery = angular.lowercase(query);
+			return function filterFn(vegetable){
+				return (vegetable._lowername.indexOf(lowercaseQuery) === 0) || (vegetable._lowertype.indexOf(lowercaseQuery) === 0);
+			}
+		}
+	}
+</script>
+</body>
+</html>
