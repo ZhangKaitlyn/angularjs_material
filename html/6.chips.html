@@ -152,6 +152,37 @@
 	</md-content>
 </div>
 
+<div ng-controller="customSepratorCtrl as ctrl" layout="column">
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<h2>Custom Separator Keys</h2>
+		</div>
+	</md-toolbar>
+	<md-content class="md-padding" layout="column">
+		<h4 class="md-title">Use &lt;md-separator-keys&gt; to customize the key codes with trigger chip creation.</h4>
+		<md-chips ng-model="ctrl.tags" md-separator-keys="ctrl.keys" placeholder="Enter a key" secondary-placeholder="Comma separated tags"></md-chips>
+
+		<h4 class="md-title">Add Custom separator key codes such as semicolon for e-mails.</h4>
+		<md-chips ng-model="ctrl.contacts" md-separator-keys="ctrl.customKeys"></md-chips>
+	</md-content>
+</div>
+
+<div ng-controller="staticChipsCtrl as ctrl" layout="column">
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<h2>Static Chips</h2>
+		</div>
+	</md-toolbar>
+	<md-content class="md-padding" layout="column">
+		<md-chips>
+			<md-chip>HocKey</md-chip>
+			<md-chip>Lacy</md-chip>
+			<md-chip>Bob</md-chip>
+			<md-chip>{{ctrl.chipText}}</md-chip>
+		</md-chips>
+	</md-content>
+</div>
+
 <script src="../node_modules/angular/angular.min.js"></script>
 <script src="../node_modules/angular-aria/angular-aria.min.js"></script>
 <script src="../node_modules/angular-animate/angular-animate.min.js"></script>
@@ -161,7 +192,9 @@
 	angular.module("chipsApp",["ngMaterial", "ngMessages"])
 	.controller("basicChipsCtrl", basicChipsCtrl)
 	.controller("contactChipsCtrl", contactChipsCtrl)
-	.controller("customInputsChipsCtrl", customInputsChipsCtrl);
+	.controller("customInputsChipsCtrl", customInputsChipsCtrl)
+	.controller("customSepratorCtrl", customSepratorCtrl)
+	.controller("staticChipsCtrl", staticChipsCtrl);
 
 	function basicChipsCtrl(){
 		var self = this;
@@ -331,6 +364,19 @@
 				return (vegetable._lowername.indexOf(lowercaseQuery) === 0) || (vegetable._lowertype.indexOf(lowercaseQuery) === 0);
 			}
 		}
+	}
+	function customSepratorCtrl($mdConstant){
+		var self = this;
+		self.tags = [];
+		self.keys = [$mdConstant.KEY_CODE.ENTER, $mdConstant.KEY_CODE.COMMA];
+
+		self.contacts = ["abc@example.com"];
+		var semicolon = 186;
+		self.customKeys = [$mdConstant.KEY_CODE.ENTER, $mdConstant.KEY_CODE.COMMA, semicolon];
+	}
+	function staticChipsCtrl(){
+		var self = this;
+		self.chipText = "ctrlText";
 	}
 </script>
 </body>
