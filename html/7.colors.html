@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Colors</title>
+	<link rel="stylesheet" href="../node_modules/angular-material/angular-material.min.css">
+</head>
+<body ng-aoo="colorsApp">
+<div layout="column" class="md-padding" ng-controller="colorsCtrl">
+	<span class="card-title"><code>&lt;user-card&gt;</code>without md-color features</span>
+	<regular-card name="User Name" md-theme="default"></regular-card>
+	<user-card name="User Name" md-theme="default"></user-card>
+</div>
+
+<script src="../node_modules/angular/angular.min.js"></script>
+<script src="../node_modules/angular-aria/angular-aria.min.js"></script>
+<script src="../node_modules/angular-animate/angular-animate.min.js"></script>
+<script src="../node_modules/angular-material/angular-material.min.js"></script>
+<script>
+	angular.module("colorsApp",["ngMaterial"])
+	.directive("regularCard", function(){
+		console.log("123456");
+		return {
+			restrict: 'E',
+			templateUrl: 'regularCard.tmpl.html',
+			scope: {
+				name: '@'
+			}
+		}
+	}).directive('userCard', function () {
+	    return {
+	      restrict: 'E',
+	      templateUrl: 'userCard.tmpl.html',
+	      scope: {
+	        name: '@',
+	        theme: '@'
+	      },
+	      controller: function ($scope) {
+	        $scope.theme = $scope.theme || 'default';
+	      }
+	    }
+	  });
+</script>
+</body>
+</html>
