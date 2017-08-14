@@ -4,11 +4,16 @@
 	<title>Colors</title>
 	<link rel="stylesheet" href="../node_modules/angular-material/angular-material.min.css">
 </head>
-<body ng-aoo="colorsApp">
-<div layout="column" class="md-padding" ng-controller="colorsCtrl">
+<body ng-app="colorsApp">
+<div layout="column" class="md-padding">
 	<span class="card-title"><code>&lt;user-card&gt;</code>without md-color features</span>
 	<regular-card name="User Name" md-theme="default"></regular-card>
-	<user-card name="User Name" md-theme="default"></user-card>
+
+	<span class="card-title"><code>&lt;user-card&gt;</code>coloring using the 'default' Theme</span>
+	<user-card name="User Name"></user-card>
+
+	<span class="card-title"><code>&lt;user-card&gt;</code>coloring using the 'forest' Theme</span>
+	<user-card name="User Name" theme="forest"></user-card>
 </div>
 
 <script src="../node_modules/angular/angular.min.js"></script>
@@ -17,8 +22,14 @@
 <script src="../node_modules/angular-material/angular-material.min.js"></script>
 <script>
 	angular.module("colorsApp",["ngMaterial"])
+	.config(function ($mdThemingProvider, $mdIconProvider) {
+		$mdThemingProvider.theme("forest")
+		.primaryPalette("brown")
+		.accentPalette("green");
+
+		$mdIconProvider.defaultIconSet("../assets/imgs/smile.svg", 24);
+	})
 	.directive("regularCard", function(){
-		console.log("123456");
 		return {
 			restrict: 'E',
 			templateUrl: 'regularCard.tmpl.html',

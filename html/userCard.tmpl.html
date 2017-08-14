@@ -1,12 +1,12 @@
-<md-card>
+<md-card md-colors="::{backgroundColor: '{{theme}}-primary-700'}">
 	<md-card-title>
 		<md-title-media>
-			<div class="md-media-sm card-media" layout>
+			<div class="md-media-sm card-media" layout md-colors="::{background: '{{theme}}-accent'}">
 				<md-icon md-svg-src="../assets/imgs/smile.svg"></md-icon>
 			</div>
 		</md-title-media>
 		<md-card-title-text>
-			<span class="md-headline">{{name}}</span>
+			<span class="md-headline">{{theme}}-{{name}}</span>
 			<span class="md-subhead">Insum Iorem caveat emptor...</span>
 		</md-card-title-text>
 	</md-card-title>
