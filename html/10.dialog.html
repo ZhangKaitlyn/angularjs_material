@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dialog</title>
+	<link rel="stylesheet" href="../node_modules/angular-material/angular-material.min.css">
+	<style>
+		.popupContainer{
+		    width: 500px;
+		    height: 300px;
+		    margin: 0 auto;
+		    border: 1px solid;
+		    position: relative;
+		}
+	</style>
+</head>
+<body ng-app="dialogApp">
+	<div ng-controller="dialogCtrl" class="md-padding popupContainer" id="popupContainer">
+		<div class="btns" layout="row" layout-wrap layout-margin layout-align="center">
+			<md-button class="md-primary md-raised" ng-click="showAlert($event)">Alert Dialog</md-button>
+			<md-button class="md-primary md-raised" ng-click="showConfirm($event)">Confirm Dialog</md-button>
+			<md-button class="md-primary md-raised" ng-click="showPrompt($event)">Prompt Dialog</md-button>
+			<md-button class="md-primary md-raised" ng-click="showAdvanced($event)">Custom Dialog</md-button>
+			<md-button class="md-primary md-raised" ng-click="showTabDialog($event)">Tab Dialog</md-button>
+			<md-button class="md-primary md-raised" ng-click="showPrerenderedDialog($event)" ng-if="listPrerenderedButton">Pre-rendered Dialog</md-button>
+		</div>
+		<div layout="row" layout-wrap layout-margin layout-align="center">
+			<p>{{status}}</p>
+		</div>
+		<div layout="row" layout-wrap layout-margin layout-align="center">
+			<md-checkbox ng-model="listPrerenderedButton">Show Pre-Rendered Dialog</md-checkbox>
+		</div>
+		<div layout="row" layout-wrap layout-margin layout-align="center">
+			<md-checkbox ng-model="customFullscreen">Allows the dialog to consume all available space on small devices</md-checkbox>
+		</div>
+	</div>
+
+	<script src="../node_modules/angular/angular.min.js"></script>
+	<script src="../node_modules/angular-aria/angular-aria.min.js"></script>
+	<script src="../node_modules/angular-animate/angular-animate.min.js"></script>
+	<script src="../node_modules/angular-material/angular-material.min.js"></script>
+	<script>
+		angular.module("dialogApp",["ngMaterial"])
+		.controller("dialogCtrl", function($scope, $mdDialog){
+			$scope.status = "";
+			$scope.customFullscreen = false;
+
+			$scope.showAlert = function(event) {
+				$mdDialog.show(
+					$mdDialog.alert()
+					.parent(angular.element(document.querySelector("#popupContainer")))
+					.clickOutsideToClose(true)
+					.title("This is an alert title")
+					.textContent("You can specfy some description text in here.")
+					.ariaLabel("Alert Dialog Demo")
+					.ok("OK")
+					.targetEvent(event)
+				);
+			};
+
+			$scope.showConfirm = function(event){
+				var confirm = $mdDialog.confirm()
+				.parent(angular.element(document.querySelector("#popupContainer")))
+				.title("Would you like to delete your debt?")
+				.textContent("All of the banks have agreed to forgive you your debts.")
+				.ariaLabel("Lucky day")
+				.targetEvent(event)
+				.ok('please do it')
+				.cancel("No");
+
+				$mdDialog.show(confirm).then(function(){
+					$scope.status = "status yes";
+				}, function(){
+					$scope.status = "status no";
+				});
+			}
+
+			$scope.showPrompt = function(event){
+				var confirm = $mdDialog.prompt()
+				.parent(angular.element(document.querySelector("#popupContainer")))
+				.title("What would you name your dog?")
+				.textContent("Bowser is a common name.")
+				.placeholder("Dog name")
+				.ariaLabel("Dog name")
+				.initialValue("Huang")
+				.targetEvent(event)
+				.ok("OKey!")
+				.cancel("I am a cat person");
+
+				$mdDialog.show(confirm).then(function(result){
+					$scope.status = "your dog name is "+result+".";
+				}, function(){
+					$scope.status = "You did not name your dog.";
+				})
+			}
+
+			$scope.showAdvanced = function(event){
+				$mdDialog.show({
+					controller: customDialogCtrl,
+					templateUrl: "customDialog.tmpl.html",
+					parent: angular.element(document.body),
+					targetEvent: event,
+					clickOutsideToClose: true,
+					fullScreen: $scope.customFullscreen
+				})
+				.then(function(answer){
+					$scope.status = "You said the information was " + answer +".";
+				}, function(){
+					$scope.status = "You cancelled the dialog.";
+				})
+			}
+		});
+	</script>
+</body>
+</html>
