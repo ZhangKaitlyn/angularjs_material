@@ -117,6 +117,20 @@
 					$mdDialog.hide(answer);
 				}
 			}
+
+			$scope.showTabDialog = function(event){
+				$mdDialog.show({
+					controller: customDialogCtrl,
+					templateUrl: "tabDialog.tmpl.html",
+					parent: angular.element(document.body),
+					targetEvent:event,
+					clickOutsideToClose: true
+				}).then(function(answer){
+					$scope.status = "You said the information was '" + answer + "'.";
+				}, function(){
+					$scope.status = "You cancelled the dialog."
+				})
+			}
 		});
 	</script>
 </body>
