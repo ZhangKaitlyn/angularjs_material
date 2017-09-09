@@ -2,6 +2,8 @@
 <html>
 <head>
 	<title>Dialog</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../node_modules/angular-material/angular-material.min.css">
 	<style>
 		.popupContainer{
@@ -32,6 +34,44 @@
 		<div layout="row" layout-wrap layout-margin layout-align="center">
 			<md-checkbox ng-model="customFullscreen">Allows the dialog to consume all available space on small devices</md-checkbox>
 		</div>
+
+		<div style="visibility: hidden;">
+			<div id="preRenderedDialogContent" class="md-dialog-container">
+				<md-dialog layout-padding>
+					<h2>Pre-Rendered Dialog</h2>
+					<p>
+						pre-rendered dialog: $mdDialog不编译模板
+						<br/><br/>
+						dialog的内容是静态的dom，不弹出的情况下visibility为hidden
+						<br/>
+						一旦模态框开启，我们仅仅从静态dom中获取，关闭后我们把元素返回dom原来的位置
+					</p>
+				</md-dialog>
+			</div>
+		</div>
+	</div>
+
+	<div ng-controller="openFromCloseToCtrl" class="md-padding" layout="row" style="height:300px;">
+		<div layout="column" layout-align="center center" style="background-color: #f3f3f3" class="md-padding">
+			<span id="left">left</span>
+		</div>
+		<div layout="column" layout-align="center start" layout-padding flex>
+			<p>一个对话框可以通过 <code>openFrom </code> 以及 <code>closeTo</code> 确定来自哪里到哪去。</p>
+			<div layout="column" layout-align="center center" style="width: 100%">
+				<md-button class="md-primary md-raised" ng-click="openFromLeft()">Open From Left ---- Close To Right</md-button>
+				<md-button class="md-primary md-raised" ng-click="openOffsetScreen()">Open From Top Left ---- Close Slide Down</md-button>
+			</div>
+		</div>
+		<div layout="column" layout-align="center center" style="background-color: #f3f3f3;" class="md-padding">
+			<span id="right">right</span>
+		</div>
+	</div>
+
+	<div ng-controller="themeCtrl" class="container" md-theme="{{theme}}">
+		<p class="inset">
+			We hava an interal that changes the color of the button from <code>red</code> to <code>blue</code> themes,Open the dialog to see the theme being inherited to the dialog and any component inside
+		</p>
+		<md-button class="md-primary md-raised" ng-click="showAdvanced($event)">Open Dialog</md-button>
 	</div>
 
 	<script src="../node_modules/angular/angular.min.js"></script>
@@ -40,6 +80,10 @@
 	<script src="../node_modules/angular-material/angular-material.min.js"></script>
 	<script>
 		angular.module("dialogApp",["ngMaterial"])
+		.config(function($mdThemingProvider){
+			$mdThemingProvider.theme("red").primaryPalette("red");
+			$mdThemingProvider.theme("blue").primaryPalette("blue");
+		})
 		.controller("dialogCtrl", function($scope, $mdDialog){
 			$scope.status = "";
 			$scope.customFullscreen = false;
@@ -94,6 +138,7 @@
 			}
 
 			$scope.showAdvanced = function(event){
+				console.log($scope.customFullscreen);
 				$mdDialog.show({
 					controller: customDialogCtrl,
 					templateUrl: "customDialog.tmpl.html",
@@ -108,6 +153,15 @@
 					$scope.status = "You cancelled the dialog.";
 				})
 			}
+
+			$scope.showPrerenderedDialog = function(event){
+				$mdDialog.show({
+					contentElement: "#preRenderedDialogContent",
+					parent: angular.element(document.body),
+					targetEvent: event,
+					clickOutsideToClose: true
+				});
+			};
 
 			function customDialogCtrl($scope,$mdDialog){
 				$scope.cancel = function(){
@@ -130,6 +184,70 @@
 				}, function(){
 					$scope.status = "You cancelled the dialog."
 				})
+			}
+		})
+		.controller("openFromCloseToCtrl", function($scope, $mdDialog){
+			$scope.openFromLeft = function(){
+				$mdDialog.show(
+					$mdDialog.alert()
+					.clickOutsideToClose(true)
+					.title("opening from theleft")
+					.textContent("Closing to the right!")
+					.ariaLabel("Left to right demo")
+					.ok("Nice!")
+					// you can specify ethier string with query selector
+					.openFrom("#left")
+					// or an element
+					.closeTo(angular.element(document.querySelector("#right")))
+				);
+			};
+
+			$scope.openOffsetScreen = function(){
+				$mdDialog.show(
+					$mdDialog.alert()
+					.clickOutsideToClose(true)
+					.title("opening from offsetscreen")
+					.textContent("Closing to offsetscreen")
+					.ariaLabel("Offsetscreen demo")
+					.ok("Amazing!")
+					.openFrom({
+						top: -50,
+						width:50,
+						height: 100
+					})
+					.closeTo({
+						left: 1500
+					})
+				)
+			}
+		})
+		.controller("themeCtrl", function($scope, $mdDialog, $interval){
+			$scope.theme = "red";
+
+			var isThemeRed = true;
+
+			$interval(function(){
+				$scope.theme = isThemeRed ? "blue" : "red";
+				isThemeRed = !isThemeRed;
+			}, 2000);
+
+			$scope.showAdvanced = function(event){
+				$mdDialog.show({
+					controller: customDialogCtrl,
+					templateUrl: "customDialog.tmpl.html",
+					parent: angular.element(document.body),
+					targetEvent: event,
+					clickOutsideToClose: true
+				});
+			}
+
+			function customDialogCtrl($scope,$mdDialog){
+				$scope.cancel = function(){
+					$mdDialog.cancel();
+				}
+				$scope.answer = function(answer){
+					$mdDialog.hide(answer);
+				}
 			}
 		});
 	</script>
