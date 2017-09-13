@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>FAB Speed Dial</title>
+	<link rel="stylesheet" href="../node_modules/angular-material/angular-material.min.css">
+</head>
+<body ng-app="FABSpeedDialApp">
+	<div ng-controller="basicCtrl as ctrl">
+		<md-content class="md-padding" layout="column">
+			<p>You may supply a direction of <code>left</code>,<code>up</code>,<code>down</code>,<code>right</code>through the <code>md-direction</code> attribute</p>
+			<div layout="row" layout-align="center center">
+				<md-fab-speed-dial md-open="ctrl.isOpen" md-direction="{{ctrl.selectedDirection}}" ng-class="ctrl.selectedMode">
+					<md-fab-trigger>
+						<md-button aria-label="menu" class="md-fab md-warn">
+							<md-icon md-svg-src="../assets/imgs/atm.svg"></md-icon>
+						</md-button>
+					</md-fab-trigger>
+
+					<md-fab-actions>
+						<md-button aria-label="smile" class="md-fab md-warn">
+							<md-icon md-svg-src="../assets/imgs/smile.svg"></md-icon>
+						</md-button>
+						<md-button aria-label="close" class="md-fab md-warn">
+							<md-icon md-svg-src="../assets/imgs/close.svg"></md-icon>
+						</md-button>
+						<md-button aria-label="atm" class="md-fab md-warn">
+							<md-icon md-svg-src="../assets/imgs/atm.svg"></md-icon>
+						</md-button>
+					</md-fab-actions>
+				</md-fab-speed-dial>
+			</div>
+			<div layout="row" layout-align="space-around">
+				<div layout="column" layout-align="start center">
+					<b>direction {{ctrl}}</b>
+					<md-radio-group ng-model="ctrl.selectedDirection">
+						<md-radio-button ng-repeat="direction in ctrl.availableDirections" ng-value="direction" class="text-capitalize">{{direction}}</md-radio-button>
+					</md-radio-group>
+				</div>
+				<div layout="column" layout-align="start center">
+					<b>Open/Closed</b>
+					<md-checkbox ng-model="ctrl.isOpen">Open</md-checkbox>
+				</div>
+				<div layout="column" layout-align="start center">
+					<b>Animation Modes</b>
+					<md-radio-group ng-model="ctrl.selectedMode">
+						<md-radio-button ng-repeat="mode in ctrl.availModes" ng-value="mode" class="text-capitalize">{{mode}}</md-radio-button>
+					</md-radio-group>
+				</div>
+			</div>
+		</md-content>
+	</div>
+
+	<script src="../node_modules/angular/angular.min.js"></script>
+	<script src="../node_modules/angular-aria/angular-aria.min.js"></script>
+	<script src="../node_modules/angular-animate/angular-animate.min.js"></script>
+	<script src="../node_modules/angular-material/angular-material.min.js"></script>
+	<script>
+		angular.module("FABSpeedDialApp",["ngMaterial"])
+		.controller("basicCtrl", function($scope){
+			$scope.topDirections = ["left", "up"];
+			$scope.bottomDirections=["down", "right"];
+
+			$scope.isOpen = false;
+			$scope.availableDirections = ["up","down","left","right"];
+			$scope.selectedDirection = "up";
+
+			$scope.availModes = ["md-fling", "md-scale"];
+			$scope.selectedMode = "md-fling";
+			console.log($scope);
+		});	
+	</script>
+</body>
+</html>
