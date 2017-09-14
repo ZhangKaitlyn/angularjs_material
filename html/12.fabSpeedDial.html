@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="utf-8">
 	<title>FAB Speed Dial</title>
 	<link rel="stylesheet" href="../node_modules/angular-material/angular-material.min.css">
 </head>
 <body ng-app="FABSpeedDialApp">
 	<div ng-controller="basicCtrl as ctrl">
+		<md-toolbar>
+			<h2 class="md-toolbar-tools">
+				<span>Basic FAB Speed Dial</span>
+			</h2>
+		</md-toolbar>
 		<md-content class="md-padding" layout="column">
 			<p>You may supply a direction of <code>left</code>,<code>up</code>,<code>down</code>,<code>right</code>through the <code>md-direction</code> attribute</p>
 			<div layout="row" layout-align="center center">
@@ -17,13 +23,13 @@
 					</md-fab-trigger>
 
 					<md-fab-actions>
-						<md-button aria-label="smile" class="md-fab md-warn">
+						<md-button aria-label="smile" class="md-fab md-raised md-mini">
 							<md-icon md-svg-src="../assets/imgs/smile.svg"></md-icon>
 						</md-button>
-						<md-button aria-label="close" class="md-fab md-warn">
+						<md-button aria-label="close" class="md-fab md-raised md-mini">
 							<md-icon md-svg-src="../assets/imgs/close.svg"></md-icon>
 						</md-button>
-						<md-button aria-label="atm" class="md-fab md-warn">
+						<md-button aria-label="atm" class="md-fab md-raised md-mini">
 							<md-icon md-svg-src="../assets/imgs/atm.svg"></md-icon>
 						</md-button>
 					</md-fab-actions>
@@ -31,7 +37,7 @@
 			</div>
 			<div layout="row" layout-align="space-around">
 				<div layout="column" layout-align="start center">
-					<b>direction {{ctrl}}</b>
+					<b>direction</b>
 					<md-radio-group ng-model="ctrl.selectedDirection">
 						<md-radio-button ng-repeat="direction in ctrl.availableDirections" ng-value="direction" class="text-capitalize">{{direction}}</md-radio-button>
 					</md-radio-group>
@@ -50,6 +56,43 @@
 		</md-content>
 	</div>
 
+	<div layout="column" ng-controller="moreOptionCtrl as ctrl">
+		<md-toolbar>
+			<h2 class="md-toolbar-tools">
+				<span>More Optional FAB Speed Dial</span>
+			</h2>
+		</md-toolbar>
+		<md-content class="md-padding" layout="column">
+			<p>FAB Speed Dial适用于很多高级场景,下面的例子是混合使用场景，甚至包括Toolbar - SpeedDial</p>
+			<md-toolbar>
+				<h3>
+					<md-button>Test1</md-button>
+					<md-button>Test2</md-button>
+					<md-button hide-sm>Test3</md-button>
+					<md-button hide-sm>Test4</md-button>
+					<md-button hide-sm>Test5</md-button>
+					<md-button hide-sm>Test6</md-button>
+				</h3>
+			</md-toolbar>
+			<md-fab-speed-dial ng-hide="ctrl.hidden" md-direction="left" md-open="ctrl.isOpen" class="md-scale md-fab-top-right" ng-class="{'md-hover-full':ctrl.hover}" ng-mouseenter="ctrl.isOpen = true" ng-mouseleave="ctrl.isOpen = false">
+				<md-fab-trigger>
+					<md-button aria-label="atm" class="md-fab md-warn">
+						<md-tooltip md-direction="top" md-visible="tooltipVisible">ATM</md-tooltip>
+						<md-icon md-svg-src="../assets/imgs/atm.svg"></md-icon>
+					</md-button>
+				</md-fab-trigger>
+				<md-fab-actions>
+					<div ng-repeat="item in ctrl.items">
+						<md-button aria-label="{{item.name}}" class="md-fab md-raised md-mini" ng-click="ctrl.openDialog($event, item)">
+							<md-tooltip md-direction="{{item.direction}}" md-visible="tooltipVisible" md-autohide="false">{{item.name}}</md-tooltip>
+							<md-icon md-svg-src="{{item.src}}" aria-label="{{item.name}}"></md-icon>
+						</md-button>
+					</div>
+				</md-fab-actions>
+			</md-fab-speed-dial>
+		</md-content>
+	</div>
+
 	<script src="../node_modules/angular/angular.min.js"></script>
 	<script src="../node_modules/angular-aria/angular-aria.min.js"></script>
 	<script src="../node_modules/angular-animate/angular-animate.min.js"></script>
@@ -57,16 +100,20 @@
 	<script>
 		angular.module("FABSpeedDialApp",["ngMaterial"])
 		.controller("basicCtrl", function($scope){
-			$scope.topDirections = ["left", "up"];
-			$scope.bottomDirections=["down", "right"];
+			this.topDirections = ["left", "up"];
+			this.bottomDirections=["down", "right"];
 
-			$scope.isOpen = false;
-			$scope.availableDirections = ["up","down","left","right"];
-			$scope.selectedDirection = "up";
+			this.isOpen = false;
+			this.availableDirections = ["up","down","left","right"];
+			this.selectedDirection = "up";
 
-			$scope.availModes = ["md-fling", "md-scale"];
-			$scope.selectedMode = "md-fling";
-			console.log($scope);
+			this.availModes = ["md-fling", "md-scale"];
+			this.selectedMode = "md-fling";
+		})
+		.controller("moreOptionCtrl", function(){
+			var self = this;
+			self.isOpen = false;
+			self.hidden = false;
 		});	
 	</script>
 </body>
