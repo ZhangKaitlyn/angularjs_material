@@ -65,7 +65,7 @@
 		<md-content class="md-padding" layout="column">
 			<p>FAB Speed Dial适用于很多高级场景,下面的例子是混合使用场景，甚至包括Toolbar - SpeedDial</p>
 			<md-toolbar>
-				<h3>
+				<h3 class="md-toolbar-tools">
 					<md-button>Test1</md-button>
 					<md-button>Test2</md-button>
 					<md-button hide-sm>Test3</md-button>
@@ -74,7 +74,7 @@
 					<md-button hide-sm>Test6</md-button>
 				</h3>
 			</md-toolbar>
-			<md-fab-speed-dial ng-hide="ctrl.hidden" md-direction="left" md-open="ctrl.isOpen" class="md-scale md-fab-top-right" ng-class="{'md-hover-full':ctrl.hover}" ng-mouseenter="ctrl.isOpen = true" ng-mouseleave="ctrl.isOpen = false">
+			<md-fab-speed-dial style="margin-top: 48px;" ng-hide="ctrl.hidden" md-direction="left" md-open="ctrl.isOpen" class="md-scale md-fab-top-right" ng-class="{'md-hover-full':ctrl.hover}" ng-mouseenter="ctrl.isOpen = true" ng-mouseleave="ctrl.isOpen = false">
 				<md-fab-trigger>
 					<md-button aria-label="atm" class="md-fab md-warn">
 						<md-tooltip md-direction="top" md-visible="tooltipVisible">ATM</md-tooltip>
@@ -90,6 +90,20 @@
 					</div>
 				</md-fab-actions>
 			</md-fab-speed-dial>
+		</md-content>
+		<md-content class="md-padding" layout="row" layout-sm="column" layout-ailgn="space-around">
+			<div flex-gt-sm="45">
+				<h3>Tooltips</h3>
+				<h3>ngHide</h3>
+				<p>speed dial支持 <code>ng-hide</code> 属性 <md-checkbox ng-model="ctrl.hidden">Hide the speed dil</md-checkbox></p>
+				<h3>ngRepeat</h3>
+			</div>
+			<div flex-gt-sm="45">
+				<h3>Hovering</h3>
+				<p>可以通过 <code>ng-mouseenter</code> 和 <code>ng-mouseleave</code> 控制speed dial的开关</p>
+				<p><code>md-hover-full</code>控制响应开关的区域 <md-checkbox ng-model="ctrl.hover">Enable "full hover" mode</md-checkbox></p>
+				<h3>$mdDialog</h3>
+			</div>
 		</md-content>
 	</div>
 
@@ -110,10 +124,34 @@
 			this.availModes = ["md-fling", "md-scale"];
 			this.selectedMode = "md-fling";
 		})
-		.controller("moreOptionCtrl", function(){
+		.controller("moreOptionCtrl", function($scope, $timeout){
 			var self = this;
 			self.isOpen = false;
 			self.hidden = false;
+			self.hover = false;
+
+			self.items = [
+				{
+					name:"smile",
+					icon:"../assets/imgs/smile.svg",
+					direction:"bottom"
+				},
+				{
+					name:"atm",
+					icon:"../assets/imgs/atm.svg",
+					direction:"top"
+				}
+			];
+
+			$scope.$watch("ctrl.isOpen", function(isOpen){
+				if (isOpen) {
+					$timeout(function() {
+						$scope.tooltipVisible = self.isOpen;
+					}, 600);
+				}else{
+					$scope.tooltipVisible = self.isOpen;
+				}
+			});
 		});	
 	</script>
 </body>
